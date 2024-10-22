@@ -35,3 +35,30 @@ def result(board, action):
     new_board = [row[:] for row in board]
     new_board[i][j] = player(board)
     return new_board
+
+def winner(board):
+    """
+    Returns the winner of the game, if there is one.
+    """
+    # Check rows
+    for row in board:
+        if row[0] == row[1] == row[2] and row[0] is not EMPTY:
+            return row[0]
+    # Check columns
+    for j in range(3):
+        if board[0][j] == board[1][j] == board[2][j] and board[0][j] is not EMPTY:
+            return board[0][j]
+    # Check diagonals
+    if board[0][0] == board[1][1] == board[2][2] and board[0][0] is not EMPTY:
+        return board[0][0]
+    if board[0][2] == board[1][1] == board[2][0] and board[0][2] is not EMPTY:
+        return board[0][2]
+    return None
+
+def terminal(board):
+    """
+    Returns True if game is over, False otherwise.
+    """
+    if winner(board) is not None:
+        return True
+    return not any(EMPTY in row for row in board)
