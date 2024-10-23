@@ -62,3 +62,15 @@ def terminal(board):
     if winner(board) is not None:
         return True
     return not any(EMPTY in row for row in board)
+
+def utility(board):
+    """
+    Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
+    """
+    win = winner(board)
+    if win == X:
+        return 1
+    elif win == O:
+        return -1
+    else:
+        return 0
