@@ -85,48 +85,44 @@ def minimax(board):
     current_player = player(board)
 
     if current_player == X:
-        best_value = -float('inf')
-        best_action = None
-        alpha = -float('inf')
-        beta = float('inf')
-        for action in actions(board):
-            value = min_value(result(board, action), alpha, beta)
-            if value > best_value:
-                best_value = value
-                best_action = action
-            alpha = max(alpha, best_value)
-        return best_action
+        value, best_action = max_value(board, -float('inf'), float('inf'))
     else:
-        best_value = float('inf')
-        best_action = None
-        alpha = -float('inf')
-        beta = float('inf')
-        for action in actions(board):
-            value = max_value(result(board, action), alpha, beta)
-            if value < best_value:
-                best_value = value
-                best_action = action
-            beta = min(beta, best_value)
-        return best_action
+        value, best_action = min_value(board, -float('inf'), float('inf'))
+
+    return best_action
 
 def max_value(board, alpha, beta):
+    """
+    Returns the maximum value for the current board state, and the associated action.
+    """
     if terminal(board):
-        return utility(board)
+        return utility(board), None
     v = -float('inf')
+    best_action = None
     for action in actions(board):
-        v = max(v, min_value(result(board, action), alpha, beta))
-        if v >= beta:
-            return v
+        min_result, _ = min_value(result(board, action), alpha, beta)
+        if min_result > v:
+            v = min_result
+            best_action = action
         alpha = max(alpha, v)
-    return v
+        if v >= beta:
+            break
+    return v, best_action
 
 def min_value(board, alpha, beta):
+    """
+    Returns the minimum value for the current board state, and the associated action.
+    """
     if terminal(board):
-        return utility(board)
+        return utility(board), None
     v = float('inf')
+    best_action = None
     for action in actions(board):
-        v = min(v, max_value(result(board, action), alpha, beta))
-        if v <= alpha:
-            return v
+        max_result, _ = max_value(result(board, action), alpha, beta)
+        if max_result < v:
+            v = max_result
+            best_action = action
         beta = min(beta, v)
-    return v
+        if v <= alpha:
+            break
+    return v, best_action
